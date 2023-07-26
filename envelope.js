@@ -3,10 +3,27 @@ const express = require('express');
 // Instantiate the app here
 const envelopeRouter = express.Router();
 
+const {validateNewEnvelopes} = require('./utils/envelopeUtils');
 
+const envelopes = [
+                    {
+                        'id': 1,
+                        'title': 'test',
+                        'budgget': 100
+                    }
+                ]
 
 envelopeRouter.get('/', (req, res, next) => {
     res.send('Hello, World - Envelope');
+});
+
+envelopeRouter.post('/', (req, res, next) => {
+    const newEnvelopes = req.body;
+    if (validateNewEnvelopes(newEnvelopes)) {
+        res.status(201).send('Success! Envelope added.');
+    } else {
+        res.status(400).send('Could not add Envelope');
+    }
 });
 
 module.exports = envelopeRouter;
