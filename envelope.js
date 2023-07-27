@@ -9,7 +9,7 @@ const envelopes = [
                     {
                         'id': 1,
                         'title': 'test',
-                        'budgget': 100
+                        'budget': 100
                     }
                 ]
 
@@ -18,7 +18,9 @@ envelopeRouter.get('/', (req, res, next) => {
 });
 
 envelopeRouter.post('/', (req, res, next) => {
+    console.log(`Server reached post`);
     const newEnvelopes = req.body;
+    console.log( req.body);
     if (validateNewEnvelopes(newEnvelopes)) {
         res.status(201).send('Success! Envelope added.');
     } else {
