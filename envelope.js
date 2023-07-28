@@ -3,9 +3,11 @@ const express = require('express');
 // Instantiate the app here
 const envelopeRouter = express.Router();
 
-const {validateNewEnvelopes} = require('./utils/envelopeUtils');
+const {validateNewEnvelopes, 
+    createArrrayOfNewEnvelopes,
+    storeNewEnvelopes} = require('./utils/envelopeUtils');
 
-const envelopes = [
+let storedEnvelopes = [
                     {
                         'id': 1,
                         'title': 'test',
@@ -18,11 +20,12 @@ envelopeRouter.get('/', (req, res, next) => {
 });
 
 envelopeRouter.post('/', (req, res, next) => {
-    console.log(`Server reached post`);
     const newEnvelopes = req.body;
-    console.log( req.body);
-    if (validateNewEnvelopes(newEnvelopes)) {
-        res.status(201).send('Success! Envelope added.');
+    const envelopes = newEnvelopes.envelopes;
+    if (validateNewEnvelopes(envelopes)) {
+        const addedEnvelopes = createArrrayOfNewEnvelopes(envelopes, storedEnvelopes);
+        storedEnvelopes = storeNewEnvelopes(addedEnvelopes, storedEnvelopes);
+        res.status(201).send(addedEnvelopes);
     } else {
         res.status(400).send('Could not add Envelope');
     }
