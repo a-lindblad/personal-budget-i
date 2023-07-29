@@ -5,10 +5,11 @@ const envelopeRouter = express.Router();
 
 const {validateNewEnvelope, 
     storeNewEnvelope,
-    storedEnvelopes} = require('./utils/envelopeUtils');
+    fetchStoredEvelopes} = require('./utils/envelopeUtils');
 
 envelopeRouter.get('/', (req, res, next) => {
-    res.send('Hello, World - Envelope');
+    const storedEnvelopes = fetchStoredEvelopes();
+    res.send(storedEnvelopes);
 });
 
 envelopeRouter.post('/', (req, res, next) => {
@@ -16,7 +17,7 @@ envelopeRouter.post('/', (req, res, next) => {
     if (validateNewEnvelope(newEnvelope)) {
         const addedEnvelope = storeNewEnvelope(newEnvelope);
         res.status(201).send(addedEnvelope);
-        console.log(storedEnvelopes);
+        console.log(fetchStoredEvelopes());
     } else {
         res.status(400).send('Could not add Envelope');
     }
