@@ -11,7 +11,7 @@ const fetchStoredEvelopes = () => {
     return storedEnvelopes;
 }    
 
-const validateNewEnvelope = (envelope) => {
+const validateEnvelope = (envelope) => {
     let result = true;
     let envelopeTitle = envelope.title;
     let envelopeBudget = envelope.budget;
@@ -51,9 +51,22 @@ const createArrrayOfNewEnvelope = (newEnvelope) => {
     return addEnvelope;
 };
 
+const fetchEnvelopeById = (id) => {
+    if (typeof(id) !== "number") {
+        return 0;
+    }
+    const allEnvelopesOject = readStoredEnvelopes();
+    const allEnvelopesArray = allEnvelopesOject.envelopes;
+    const envelope = allEnvelopesArray.find( item => item.id === id);
+    if (typeof(envelope) === "undefined") {
+        return 0;
+    }
+    return envelope;
+};
 
 module.exports = {
-    validateNewEnvelope: validateNewEnvelope,
+    validateEnvelope: validateEnvelope,
     storeNewEnvelope: storeNewEnvelope,
-    fetchStoredEvelopes: fetchStoredEvelopes
+    fetchStoredEvelopes: fetchStoredEvelopes,
+    fetchEnvelopeById: fetchEnvelopeById
 };

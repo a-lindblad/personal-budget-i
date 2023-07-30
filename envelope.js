@@ -3,9 +3,20 @@ const express = require('express');
 // Instantiate the app here
 const envelopeRouter = express.Router();
 
-const {validateNewEnvelope, 
+const {validateEnvelope, 
     storeNewEnvelope,
-    fetchStoredEvelopes} = require('./utils/envelopeUtils');
+    fetchStoredEvelopes,
+    fetchEnvelopeById} = require('./utils/envelopeUtils');
+
+envelopeRouter.param('id', (req, res, next) => {
+    const id = req.params.id;
+    if (isNaN(id)) {
+        res.status(400).send();
+        return;
+    }
+    req.id = Number(id);
+    next();
+});
 
 envelopeRouter.get('/', (req, res, next) => {
     const storedEnvelopes = fetchStoredEvelopes();
@@ -14,12 +25,20 @@ envelopeRouter.get('/', (req, res, next) => {
 
 envelopeRouter.post('/', (req, res, next) => {
     const newEnvelope = req.body;
-    if (validateNewEnvelope(newEnvelope)) {
+    if (validateEnvelope(newEnvelope)) {
         const addedEnvelope = storeNewEnvelope(newEnvelope);
         res.status(201).send(addedEnvelope);
-        console.log(fetchStoredEvelopes());
     } else {
         res.status(400).send('Could not add Envelope');
+    }
+});
+
+envelopeRouter.get('/:id', (req, res, next) => {
+    const envelope = fetchEnvelopeById(req.id);
+    if (envelope === 0 || ! validateEnvelope(envelope)) {
+        res.status(404).send('Unable to find any data by given id');
+    } else {
+        res.status(200).send(envelope);
     }
 });
 
