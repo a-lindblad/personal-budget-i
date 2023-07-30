@@ -2,8 +2,16 @@
 const express = require('express');
 // Instantiate the app here
 const app = express();
+const envelopeRouter = require('./envelope');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 const PORT = process.env.PORT || 3000;
+
+app.use(morgan('dev'));
+app.use(bodyParser.json());
+
+app.use('/envelope', envelopeRouter);
 
 
 app.get('/', (req, res, next) => {
