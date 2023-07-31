@@ -42,4 +42,8 @@ envelopeRouter.get('/:id', (req, res, next) => {
     }
 });
 
+envelopeRouter.put(':/id', (req, res, next) => {
+    res.status(402).send();
+});
+
 module.exports = envelopeRouter;
