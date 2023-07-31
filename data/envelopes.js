@@ -11,10 +11,8 @@ const readStoredEnvelopes = () => {
 const updateStoredEnvelopes = (updatedEnvelopesArray) => {
     const newContent = {
         "envelopes" : updatedEnvelopesArray
-    };
-    
+    };    
     const contentAsString = JSON.stringify(newContent, null ,2);
-    console.log(contentAsString);
     try {
         writeFileSync(path, contentAsString, "UTF-8");
     } catch (error) {

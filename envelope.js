@@ -6,7 +6,8 @@ const envelopeRouter = express.Router();
 const {validateEnvelope, 
     storeNewEnvelope,
     fetchStoredEvelopes,
-    fetchEnvelopeById} = require('./utils/envelopeUtils');
+    fetchEnvelopeById,
+    updateEnvelope} = require('./utils/envelopeUtils');
 
 envelopeRouter.param('id', (req, res, next) => {
     const id = req.params.id;
@@ -42,8 +43,14 @@ envelopeRouter.get('/:id', (req, res, next) => {
     }
 });
 
-envelopeRouter.put(':/id', (req, res, next) => {
-    res.status(402).send();
+envelopeRouter.put('/:id', (req, res, next) => {
+    const data = req.body;
+    const envelope = updateEnvelope(req.id, data);
+    if (! validateEnvelope(envelope)) {
+        res.status(envelope).send();
+    } else {
+        res.send(envelope);
+    }
 });
 
 module.exports = envelopeRouter;

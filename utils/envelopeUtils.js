@@ -74,7 +74,7 @@ const updateEnvelope = (id, data) => {
         return 404;
     }
     if (index === -1 ) {
-        return 404;
+        return 418;
     }
     if (! validateEnvelope(data)) {
         return 400;
