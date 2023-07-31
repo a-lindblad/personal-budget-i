@@ -7,13 +7,18 @@
     },
     {
       "id": 2,
-      "title": "Test1",
-      "budget": 200
+      "title": "TestUpd1",
+      "budget": 500
     },
     {
       "id": 3,
       "title": "Test1",
       "budget": 200
+    },
+    {
+      "id": 4,
+      "title": "Test3",
+      "budget": 700
     }
   ]
 }

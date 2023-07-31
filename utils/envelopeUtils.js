@@ -9,7 +9,7 @@ const {readStoredEnvelopes, updateStoredEnvelopes} = require('../data/envelopes.
 const fetchStoredEvelopes = () => {
     let storedEnvelopes = readStoredEnvelopes();
     return storedEnvelopes;
-}    
+} 
 
 const validateEnvelope = (envelope) => {
     let result = true;
@@ -31,8 +31,6 @@ const storeNewEnvelope = (newEnvelope) => {
     const storedEnvelopes = fetchStoredEvelopes().envelopes;
     const addedEnvelope = createArrrayOfNewEnvelope(newEnvelope);
     storedEnvelopes.push(addedEnvelope);
-    console.log(storedEnvelopes);
-    //TODO: Save storedEnelopes to file
     updateStoredEnvelopes(storedEnvelopes);
     return addedEnvelope;
 }
@@ -45,8 +43,7 @@ const createArrrayOfNewEnvelope = (newEnvelope) => {
     let addEnvelope = {};
     
     addEnvelope.id = highestUsedId +1;
-    addEnvelope.title = newEnvelope.title;
-    addEnvelope.budget = newEnvelope.budget;
+    addDataToEnvelope(addEnvelope, newEnvelope);
 
     return addEnvelope;
 };
@@ -55,8 +52,7 @@ const fetchEnvelopeById = (id) => {
     if (typeof(id) !== "number") {
         return 0;
     }
-    const allEnvelopesOject = readStoredEnvelopes();
-    const allEnvelopesArray = allEnvelopesOject.envelopes;
+    const allEnvelopesArray = fetchStoredEvelopes().envelopes;
     const envelope = allEnvelopesArray.find( item => item.id === id);
     if (typeof(envelope) === "undefined") {
         return 0;
@@ -64,9 +60,42 @@ const fetchEnvelopeById = (id) => {
     return envelope;
 };
 
+const fetchEnvelopeIndexById = (id) => {
+    const allEnvelopesArray = fetchStoredEvelopes().envelopes;
+    const index = allEnvelopesArray.findIndex( item => item.id === id);
+    return index;
+};
+
+const updateEnvelope = (id, data) => {
+    const envelope = fetchEnvelopeById(id);
+    const index = fetchEnvelopeIndexById(id);
+    const allEnvelopesArray = fetchStoredEvelopes().envelopes;
+    if (envelope === 0) {
+        return 404;
+    }
+    if (index === -1 ) {
+        return 418;
+    }
+    if (! validateEnvelope(data)) {
+        return 400;
+    }
+    addDataToEnvelope(envelope, data);
+    allEnvelopesArray[index] = envelope;
+    updateStoredEnvelopes(allEnvelopesArray);
+    return envelope;
+};
+
+const addDataToEnvelope = (addEnvelope, newEnvelope) => {
+    addEnvelope.title = newEnvelope.title;
+    addEnvelope.budget = newEnvelope.budget;
+}
+
 module.exports = {
     validateEnvelope: validateEnvelope,
     storeNewEnvelope: storeNewEnvelope,
     fetchStoredEvelopes: fetchStoredEvelopes,
-    fetchEnvelopeById: fetchEnvelopeById
+    fetchEnvelopeById: fetchEnvelopeById,
+    updateEnvelope: updateEnvelope
 };
+
+
