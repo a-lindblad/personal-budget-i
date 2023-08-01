@@ -8,12 +8,12 @@
     {
       "id": 2,
       "title": "TestUpd1",
-      "budget": 500
+      "budget": 0
     },
     {
       "id": 4,
       "title": "Test3",
-      "budget": 700
+      "budget": 1200
     }
   ]
 }

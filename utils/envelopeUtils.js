@@ -109,18 +109,18 @@ const transferBudgets = (source, dest, amount) => {
     }
 
     let sourceBudget = allEnvelopesArray[sourceIndex].budget;
-    let destBudget = allEnvelopesArray
+    let destBudget = allEnvelopesArray[destIndex].budget;
+    let newBudgets = {};
     if (amount === 'all') {
-        newBudegts = calculateNewBudgets(sourceBudget, destBudget, sourceBudget);
+        newBudgets = calculateNewBudgets(sourceBudget, destBudget, sourceBudget);
     } else {
-        newBudegts = calculateNewBudgets(sourceBudget, destBudget, amount);
+        newBudgets = calculateNewBudgets(sourceBudget, destBudget, amount);
     }
-
-    if (newBudgets === false) {
+    if (newBudgets.status === false) {
         return 400;
     }
-    allEnvelopesArray[sourceIndex].budget = newBudegts.source;
-    allEnvelopesArray[destIndex].budget = newBudegts.dest;
+    allEnvelopesArray[sourceIndex].budget = newBudgets.source;
+    allEnvelopesArray[destIndex].budget = newBudgets.dest;
 
     updateStoredEnvelopes(allEnvelopesArray);
     return [allEnvelopesArray[sourceIndex], allEnvelopesArray[destIndex]];
@@ -129,10 +129,11 @@ const transferBudgets = (source, dest, amount) => {
 const calculateNewBudgets = (sourceBudget, destBudget, amount) => {
     const newBudgets = {
         "source": sourceBudget,
-        "dest": destBudget
+        "dest": destBudget,
+        "status": true
     }
     if (! isBudgetOKforTransfer(newBudgets.source, amount)) {
-        return false;
+        return {"status": false};
     }
     newBudgets.source -= amount;
     newBudgets.dest += amount;
