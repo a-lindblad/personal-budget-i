@@ -100,13 +100,62 @@ const deleteEnvelope = (id) => {
     return 200;
 };
 
+const transferBudgets = (source, dest, amount) => {
+    const sourceIndex = fetchEnvelopeIndexById(source);
+    const destIndex = fetchEnvelopeIndexById(dest);
+    const allEnvelopesArray = fetchStoredEvelopes().envelopes;
+    if (sourceIndex === -1 || destIndex === -1){
+        return 404;
+    }
+
+    let sourceBudget = allEnvelopesArray[sourceIndex].budget;
+    let destBudget = allEnvelopesArray[destIndex].budget;
+    let newBudgets = {};
+    if (amount === 'all') {
+        newBudgets = calculateNewBudgets(sourceBudget, destBudget, sourceBudget);
+    } else {
+        newBudgets = calculateNewBudgets(sourceBudget, destBudget, amount);
+    }
+    if (newBudgets.status === false) {
+        return 400;
+    }
+    allEnvelopesArray[sourceIndex].budget = newBudgets.source;
+    allEnvelopesArray[destIndex].budget = newBudgets.dest;
+
+    updateStoredEnvelopes(allEnvelopesArray);
+    return [allEnvelopesArray[sourceIndex], allEnvelopesArray[destIndex]];
+};
+
+const calculateNewBudgets = (sourceBudget, destBudget, amount) => {
+    const newBudgets = {
+        "source": sourceBudget,
+        "dest": destBudget,
+        "status": true
+    }
+    if (! isBudgetOKforTransfer(newBudgets.source, amount)) {
+        return {"status": false};
+    }
+    newBudgets.source -= amount;
+    newBudgets.dest += amount;
+
+    return newBudgets;
+};
+
+const isBudgetOKforTransfer = (budget, amount) => {
+    if (amount > budget) {
+        return false;
+    }
+    return true;
+}
+
 module.exports = {
     validateEnvelope: validateEnvelope,
     storeNewEnvelope: storeNewEnvelope,
     fetchStoredEvelopes: fetchStoredEvelopes,
     fetchEnvelopeById: fetchEnvelopeById,
     updateEnvelope: updateEnvelope,
-    deleteEnvelope: deleteEnvelope
+    deleteEnvelope: deleteEnvelope,
+    transferBudgets: transferBudgets
 };
 
 

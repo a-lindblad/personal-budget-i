@@ -10,6 +10,10 @@ const {validateEnvelope,
     updateEnvelope,
     deleteEnvelope} = require('./utils/envelopeUtils');
 
+const transferRouter = require('./transfer');
+
+envelopeRouter.use('/transfer', transferRouter);
+    
 envelopeRouter.param('id', (req, res, next) => {
     const id = req.params.id;
     if (isNaN(id)) {
