@@ -105,7 +105,8 @@ module.exports = {
     storeNewEnvelope: storeNewEnvelope,
     fetchStoredEvelopes: fetchStoredEvelopes,
     fetchEnvelopeById: fetchEnvelopeById,
-    updateEnvelope: updateEnvelope
+    updateEnvelope: updateEnvelope,
+    deleteEnvelope: deleteEnvelope
 };
 
 
