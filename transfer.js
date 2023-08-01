@@ -3,6 +3,13 @@ const express = require('express');
 // Instantiate the app here
 const transferRouter = express.Router();
 
+const {validateEnvelope, 
+    storeNewEnvelope,
+    fetchStoredEvelopes,
+    fetchEnvelopeById,
+    updateEnvelope,
+    deleteEnvelope} = require('./utils/envelopeUtils');
+
 transferRouter.param(['from', 'to'], (req, res, next) => {
     const source = req.params.from;
     const dest = req.params.to;
