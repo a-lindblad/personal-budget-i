@@ -28,8 +28,36 @@ transferRouter.param('to', (req, res, next) => {
     next();
 });
 
+transferRouter.param('amount', (req, res, next) => {
+    const amount = req.params.amount;
+    if (isNaN(amount)) {
+        res.status(400).send();
+        return;
+    }
+    req.amount = Number(amount);
+
+    next();
+});
+
 transferRouter.post('/:from/:to', (req, res, next) => {
     const envelopes = transferBudgets(req.source, req.dest, 'all');
+    if (envelopes === 400) {
+        res.status(envelopes).send('Not enough funds in budget');
+        return;
+    }
+    if (envelopes === 404) {
+        res.status(envelopes).send('Unable to find envelope');
+        return;
+    }
+    if (validateEnvelope(envelopes[0]) && validateEnvelope(envelopes[1])) {
+        res.status(200).send(envelopes);
+        return;
+    }
+    res.status(400).send();
+});
+
+transferRouter.post('/:from/:to/:amount', (req, res, next) => {
+    const envelopes = transferBudgets(req.source, req.dest, req.amount);
     if (envelopes === 400) {
         res.status(envelopes).send('Not enough funds in budget');
         return;
