@@ -7,7 +7,8 @@ const {validateEnvelope,
     storeNewEnvelope,
     fetchStoredEvelopes,
     fetchEnvelopeById,
-    updateEnvelope} = require('./utils/envelopeUtils');
+    updateEnvelope,
+    deleteEnvelope} = require('./utils/envelopeUtils');
 
 envelopeRouter.param('id', (req, res, next) => {
     const id = req.params.id;
@@ -51,6 +52,11 @@ envelopeRouter.put('/:id', (req, res, next) => {
     } else {
         res.send(envelope);
     }
+});
+
+envelopeRouter.delete('/:id', (req, res, next) => {
+    const statusCode = deleteEnvelope(req.id);
+    res.status(statusCode).send();
 });
 
 module.exports = envelopeRouter;
