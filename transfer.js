@@ -3,14 +3,9 @@ const express = require('express');
 // Instantiate the app here
 const transferRouter = express.Router();
 
-const {validateEnvelope, 
-    storeNewEnvelope,
-    fetchStoredEvelopes,
-    fetchEnvelopeById,
-    updateEnvelope,
-    deleteEnvelope} = require('./utils/envelopeUtils');
+const {transferBudgets} = require('./utils/envelopeUtils');
 
-transferRouter.param(['from', 'to'], (req, res, next) => {
+transferRouter.param(['from', 'to', 'amount'], (req, res, next) => {
     const source = req.params.from;
     const dest = req.params.to;
     if (isNaN(source)) {
@@ -28,7 +23,7 @@ transferRouter.param(['from', 'to'], (req, res, next) => {
     next();
 });
 
-transferRouter.post('/', (req, res, next) => {
+transferRouter.post('/:from/:to', (req, res, next) => {
     res.status(400).send();
 });
 

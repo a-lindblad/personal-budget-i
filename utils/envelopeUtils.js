@@ -100,13 +100,61 @@ const deleteEnvelope = (id) => {
     return 200;
 };
 
+const transferBudgets = (source, dest, amount) => {
+    const sourceIndex = fetchEnvelopeIndexById(source);
+    const destIndex = fetchEnvelopeIndexById(dest);
+    const allEnvelopesArray = fetchStoredEvelopes().envelopes;
+    if (sourceIndex === -1 || destIndex === -1){
+        return 404;
+    }
+
+    let sourceBudget = allEnvelopesArray[sourceIndex].budget;
+    let destBudget = allEnvelopesArray
+    if (amount === 'all') {
+        newBudegts = calculateNewBudgets(sourceBudget, destBudget, sourceBudget);
+    } else {
+        newBudegts = calculateNewBudgets(sourceBudget, destBudget, amount);
+    }
+
+    if (newBudgets === false) {
+        return 400;
+    }
+    allEnvelopesArray[sourceIndex].budget = newBudegts.source;
+    allEnvelopesArray[destIndex].budget = newBudegts.dest;
+
+    updateStoredEnvelopes(allEnvelopesArray);
+    return 200;
+};
+
+const calculateNewBudgets = (sourceBudget, destBudget, amount) => {
+    const newBudgets = {
+        "source": sourceBudget,
+        "dest": destBudget
+    }
+    if (! isBudgetOKforTransfer(newBudgets.source, amount)) {
+        return false;
+    }
+    newBudgets.source -= amount;
+    newBudgets.dest += amount;
+
+    return newBudgets;
+};
+
+const isBudgetOKforTransfer = (budget, amount) => {
+    if (amount > budget) {
+        return false;
+    }
+    return true;
+}
+
 module.exports = {
     validateEnvelope: validateEnvelope,
     storeNewEnvelope: storeNewEnvelope,
     fetchStoredEvelopes: fetchStoredEvelopes,
     fetchEnvelopeById: fetchEnvelopeById,
     updateEnvelope: updateEnvelope,
-    deleteEnvelope: deleteEnvelope
+    deleteEnvelope: deleteEnvelope,
+    transferBudgets: transferBudgets
 };
 
 
