@@ -90,6 +90,16 @@ const addDataToEnvelope = (addEnvelope, newEnvelope) => {
     addEnvelope.budget = newEnvelope.budget;
 }
 
+const deleteEnvelope = (id) => {
+    const allEnvelopesArray = fetchStoredEvelopes().envelopes;
+    const updatedEnvelopesArray = allEnvelopesArray.filter(item => item.id !== id);
+    if (updatedEnvelopesArray.length === allEnvelopesArray.length) {
+        return 404;
+    }
+    updateStoredEnvelopes(updatedEnvelopesArray);
+    return 200;
+};
+
 module.exports = {
     validateEnvelope: validateEnvelope,
     storeNewEnvelope: storeNewEnvelope,
