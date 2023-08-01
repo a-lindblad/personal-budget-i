@@ -21,4 +21,8 @@ transferRouter.param(['from', 'to'], (req, res, next) => {
     next();
 });
 
+transferRouter.post('/', (req, res, next) => {
+    res.status(400).send();
+});
+
 module.exports = transferRouter;
