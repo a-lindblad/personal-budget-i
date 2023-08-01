@@ -25,6 +25,11 @@ transferRouter.param('to', (req, res, next) => {
     }
     req.dest = Number(dest);
 
+    if (req.dest === req.source) {
+        res.status(400).send('Cannot be same');
+        return;
+    }
+    
     next();
 });
 
