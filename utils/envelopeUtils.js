@@ -123,7 +123,7 @@ const transferBudgets = (source, dest, amount) => {
     allEnvelopesArray[destIndex].budget = newBudegts.dest;
 
     updateStoredEnvelopes(allEnvelopesArray);
-    return 200;
+    return [allEnvelopesArray[sourceIndex], allEnvelopesArray[destIndex]];
 };
 
 const calculateNewBudgets = (sourceBudget, destBudget, amount) => {
