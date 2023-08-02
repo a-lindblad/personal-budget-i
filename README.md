@@ -1,4 +1,5 @@
 # personal-budget-i (1)
+This is a project from the [CodeCademy](https://codecademy.com) Back-End Engineer Career Path.
 
 ## Requirements
  - Node.js  (https://nodejs.org)
